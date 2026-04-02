@@ -1,0 +1,52 @@
+[
+    {
+        "Transaction Date": "2025-04-01T00:00:00",
+        "Payment Type": "Company Paid",
+        "Business Purpose": "Client meeting travel",
+        "Amount": 16632,
+        "Date Range": "2025-04-01 to 2025-04-02",
+        "Vendor": "Air India",
+        "Expense Category": "Meetings",
+        "Is_Personal": false
+    },
+    {
+        "Transaction Date": "2025-04-15T00:00:00",
+        "Payment Type": "Out-of-pocket",
+        "Business Purpose": "Team outing",
+        "Amount": 1295,
+        "Date Range": "2025-04-15 to 2025-04-15",
+        "Vendor": "FunWorld",
+        "Expense Category": "Entertainment",
+        "Is_Personal": true
+    },
+    {
+        "Transaction Date": "2025-04-17T00:00:00",
+        "Payment Type": "Out-of-pocket",
+        "Business Purpose": "Client meeting meal",
+        "Amount": 2165,
+        "Date Range": "2025-04-17 to 2025-04-18",
+        "Vendor": "Dominos",
+        "Expense Category": "Unknown",
+        "Is_Personal": true
+    },
+    {
+        "Transaction Date": "2025-03-18T00:00:00",
+        "Payment Type": "Company Paid",
+        "Business Purpose": "Internet subscription",
+        "Amount": 1949,
+        "Date Range": "2025-03-18 to 2025-03-19",
+        "Vendor": "Vodafone",
+        "Expense Category": "Communications",
+        "Is_Personal": false
+    },
+    {
+        "Transaction Date": "2025-03-10T00:00:00",
+        "Payment Type": "Company Paid",
+        "Business Purpose": "Team dinner",
+        "Amount": 2190,
+        "Date Range": "2025-03-10 to 2025-03-10",
+        "Vendor": "KFC",
+        "Expense Category": "Meals",
+        "Is_Personal": false
+    }
+]
