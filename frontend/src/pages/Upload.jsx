@@ -1,82 +1,105 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { Upload as UploadIcon, Loader, CheckCircle, AlertCircle, File } from 'lucide-react'
-import confetti from 'canvas-confetti'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import {
+  Upload as UploadIcon,
+  Loader,
+  CheckCircle,
+  AlertCircle,
+  File,
+} from "lucide-react";
+import confetti from "canvas-confetti";
 
 export default function Upload() {
-  const navigate = useNavigate()
-  const [file, setFile] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [success, setSuccess] = useState(false)
+  const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStage, setUploadStage] = useState("idle");
+  const [success, setSuccess] = useState(false);
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files?.[0]
+    const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (!selectedFile.name.endsWith('.xlsx')) {
-        toast.error('Please upload an Excel file (.xlsx)')
-        return
+      if (!selectedFile.name.endsWith(".xlsx")) {
+        toast.error("Please upload an Excel file (.xlsx)");
+        return;
       }
-      setFile(selectedFile)
-      setSuccess(false)
+      setFile(selectedFile);
+      setSuccess(false);
     }
-  }
+  };
 
   const handleDragAndDrop = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const droppedFile = e.dataTransfer.files?.[0]
-    if (droppedFile && droppedFile.name.endsWith('.xlsx')) {
-      setFile(droppedFile)
-      setSuccess(false)
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile && droppedFile.name.endsWith(".xlsx")) {
+      setFile(droppedFile);
+      setSuccess(false);
     }
-  }
+  };
 
   const handleUpload = async () => {
     if (!file) {
-      toast.error('Please select a file')
-      return
+      toast.error("Please select a file");
+      return;
     }
 
-    setLoading(true)
-    const formData = new FormData()
-    formData.append('file', file)
+    setLoading(true);
+    setUploadStage("uploading");
+    setUploadProgress(0);
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
-      const response = await axios.post('/api/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post("/api/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          )
-          setUploadProgress(progress)
-        },
-      })
+          if (!progressEvent.total) {
+            return;
+          }
 
-      setSuccess(true)
+          const rawProgress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+
+          // Keep the transfer phase below 100% until server-side analysis is finished.
+          if (rawProgress >= 95) {
+            setUploadStage("processing");
+          }
+
+          setUploadProgress(Math.min(rawProgress, 92));
+        },
+      });
+
+      setUploadProgress(100);
+      setSuccess(true);
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-      })
+      });
 
-      toast.success('File uploaded and analysis started!')
-      setTimeout(() => navigate('/results'), 2000)
+      toast.success("File uploaded and analysis started!");
+      setTimeout(() => navigate("/results"), 2000);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Upload failed')
+      toast.error(error.response?.data?.message || "Upload failed");
     } finally {
-      setLoading(false)
-      setUploadProgress(0)
+      setLoading(false);
+      setUploadStage("idle");
+      setUploadProgress(0);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-20">
       <div className="max-w-2xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold gradient-text mb-4">Upload Your Data</h1>
+          <h1 className="text-5xl font-bold gradient-text mb-4">
+            Upload Your Data
+          </h1>
           <p className="text-xl text-gray-300">
             Select your expense spreadsheet to begin the analysis
           </p>
@@ -90,12 +113,12 @@ export default function Upload() {
           <div className="relative">
             {/* 3D-like effect */}
             <div className="absolute inset-0 blur-2xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full" />
-            
+
             <div className="relative">
               <UploadIcon className="w-24 h-24 mx-auto mb-6 text-purple-400 animate-bounce" />
 
               <h2 className="text-3xl font-bold mb-4">
-                {file ? '✨ Ready to Analyze' : 'Drag & Drop Your File'}
+                {file ? "✨ Ready to Analyze" : "Drag & Drop Your File"}
               </h2>
 
               {file ? (
@@ -103,7 +126,9 @@ export default function Upload() {
                   <div className="flex items-center justify-center gap-3">
                     <File className="w-6 h-6 text-green-400" />
                     <div>
-                      <p className="font-semibold text-green-400">{file.name}</p>
+                      <p className="font-semibold text-green-400">
+                        {file.name}
+                      </p>
                       <p className="text-sm text-gray-300">
                         {(file.size / 1024).toFixed(2)} KB ready to process
                       </p>
@@ -128,7 +153,7 @@ export default function Upload() {
               <label htmlFor="fileInput" className="inline-block">
                 <button
                   type="button"
-                  onClick={() => document.getElementById('fileInput').click()}
+                  onClick={() => document.getElementById("fileInput").click()}
                   disabled={loading}
                   className="gradient-btn px-8 py-3 rounded-lg text-white font-semibold shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all disabled:opacity-50 mb-4"
                 >
@@ -139,8 +164,8 @@ export default function Upload() {
               {file && (
                 <button
                   onClick={() => {
-                    setFile(null)
-                    setSuccess(false)
+                    setFile(null);
+                    setSuccess(false);
                   }}
                   className="ml-3 px-6 py-3 rounded-lg glass text-gray-300 hover:text-white transition-all"
                   disabled={loading}
@@ -155,7 +180,11 @@ export default function Upload() {
             <div className="mt-8 space-y-4">
               <div className="flex items-center justify-center gap-3">
                 <Loader className="w-6 h-6 text-purple-400 animate-spin" />
-                <span className="text-lg text-gray-300">Processing your file...</span>
+                <span className="text-lg text-gray-300">
+                  {uploadStage === "processing"
+                    ? "Upload complete. Running analysis..."
+                    : "Uploading your file..."}
+                </span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
                 <div
@@ -163,7 +192,11 @@ export default function Upload() {
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
-              <p className="text-sm text-gray-400">{uploadProgress}% Complete</p>
+              <p className="text-sm text-gray-400">
+                {uploadStage === "processing"
+                  ? "Finalizing report..."
+                  : `${uploadProgress}% Complete`}
+              </p>
             </div>
           )}
 
@@ -188,19 +221,19 @@ export default function Upload() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
           {[
             {
-              title: 'Supported Format',
-              description: 'Excel files (.xlsx)',
-              icon: '📄',
+              title: "Supported Format",
+              description: "Excel files (.xlsx)",
+              icon: "📄",
             },
             {
-              title: 'Max Size',
-              description: '50 MB',
-              icon: '💾',
+              title: "Max Size",
+              description: "50 MB",
+              icon: "💾",
             },
             {
-              title: 'Processing Time',
-              description: 'Usually < 2 minutes',
-              icon: '⚡',
+              title: "Processing Time",
+              description: "Usually < 2 minutes",
+              icon: "⚡",
             },
           ].map((info, idx) => (
             <div key={idx} className="glass rounded-lg p-4 text-center">
@@ -212,5 +245,5 @@ export default function Upload() {
         </div>
       </div>
     </div>
-  )
+  );
 }

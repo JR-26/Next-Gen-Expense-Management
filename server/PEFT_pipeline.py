@@ -1,7 +1,6 @@
 import pandas as pd
 import json
 import re
-from model_loader import pipe
 
 
 def json_safe(val):

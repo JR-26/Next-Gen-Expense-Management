@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 import json
 import os
 from pathlib import Path
@@ -9,8 +9,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # Import your existing pipelines
-from PEFT_pipeline import run_model_pipeline
-from crew_pipeline import run_crewai_pipeline
+from pipeline_runner import DEFAULT_CATEGORIZED_JSON, DEFAULT_FINAL_REPORT_PATH, run_analysis
 from model_loader import load_model
 
 app = FastAPI(title="Expense Analytics API")
@@ -27,6 +26,7 @@ app.add_middleware(
 # Global state for analysis results
 analysis_results = None
 model_pipe = None
+BASE_DIR = Path(__file__).resolve().parent
 
 @app.on_event("startup")
 async def startup_event():
@@ -62,7 +62,7 @@ async def upload_file(file: UploadFile = File(...)):
             )
         
         # Save temporary file
-        upload_dir = Path("server/data/uploads")
+        upload_dir = BASE_DIR / "data" / "uploads"
         upload_dir.mkdir(parents=True, exist_ok=True)
         temp_path = upload_dir / file.filename
         
@@ -71,11 +71,16 @@ async def upload_file(file: UploadFile = File(...)):
             f.write(content)
         
         # Process with AI pipeline
-        categorized_json = "server/outputs/categorized.json"
-        run_model_pipeline(str(temp_path), categorized_json, model_pipe)
-        
+        categorized_json = DEFAULT_CATEGORIZED_JSON
+        final_report_path = DEFAULT_FINAL_REPORT_PATH
+
         # Generate report
-        final_report = run_crewai_pipeline()
+        final_report = run_analysis(
+            temp_path,
+            categorized_json_path=categorized_json,
+            final_report_path=final_report_path,
+            pipe=model_pipe,
+        )
         
         # Load categorized data
         with open(categorized_json, "r", encoding="utf-8") as f:
@@ -116,8 +121,8 @@ async def get_results():
     if analysis_results is None:
         # Load from disk if available
         try:
-            categorized_json = "server/outputs/categorized.json"
-            final_report = "server/outputs/final_report.txt"
+            categorized_json = DEFAULT_CATEGORIZED_JSON
+            final_report = DEFAULT_FINAL_REPORT_PATH
             
             if os.path.exists(categorized_json):
                 with open(categorized_json, "r", encoding="utf-8") as f:
@@ -229,6 +234,22 @@ async def get_categories():
             status_code=500,
             detail=f"Error getting categories: {str(e)}"
         )
+
+@app.get("/api/report/download")
+async def download_report():
+    """
+    Download the latest generated final report
+    """
+    report_path = Path(DEFAULT_FINAL_REPORT_PATH)
+
+    if not report_path.exists():
+        raise HTTPException(status_code=404, detail="Final report not found")
+
+    return FileResponse(
+        path=report_path,
+        media_type="text/plain",
+        filename="expense-analysis-report.txt",
+    )
 
 if __name__ == "__main__":
     import uvicorn

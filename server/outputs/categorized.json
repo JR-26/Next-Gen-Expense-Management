@@ -6,7 +6,7 @@
         "Amount": 16632,
         "Date Range": "2025-04-01 to 2025-04-02",
         "Vendor": "Air India",
-        "Expense Category": "Meetings",
+        "Expense Category": "Unknown",
         "Is_Personal": false
     },
     {
@@ -36,7 +36,7 @@
         "Amount": 1949,
         "Date Range": "2025-03-18 to 2025-03-19",
         "Vendor": "Vodafone",
-        "Expense Category": "Communications",
+        "Expense Category": "Unknown",
         "Is_Personal": false
     },
     {
@@ -46,7 +46,7 @@
         "Amount": 2190,
         "Date Range": "2025-03-10 to 2025-03-10",
         "Vendor": "KFC",
-        "Expense Category": "Meals",
+        "Expense Category": "Unknown",
         "Is_Personal": false
     }
 ]

@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 from crewai import Crew,LLM
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
@@ -19,20 +20,25 @@ llm = "groq/llama-3.3-70b-versatile"
 # File Paths
 # -----------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_PATH = Path(BASE_DIR)
 
-POLICY_PDF = os.path.join(BASE_DIR, "data", "expense_policy_text.pdf")
-EXPENSE_JSON = os.path.join(BASE_DIR, "outputs", "categorized.json")
-FINAL_REPORT = os.path.join(BASE_DIR, "outputs", "final_report.txt")
+POLICY_PDF = BASE_PATH / "data" / "expense_policy_text.pdf"
+EXPENSE_JSON = BASE_PATH / "outputs" / "categorized.json"
+FINAL_REPORT = BASE_PATH / "outputs" / "final_report.txt"
 
 # -----------------------------
 # Crew Pipeline
 # -----------------------------
 
-def run_crewai_pipeline():
+def run_crewai_pipeline(
+    expense_json_path: str | os.PathLike | None = None,
+    final_report_path: str | os.PathLike | None = None,
+    policy_pdf_path: str | os.PathLike | None = None,
+):
     # Load inputs
-    policy_text = load_policy_text(POLICY_PDF)
+    policy_text = load_policy_text(str(policy_pdf_path or POLICY_PDF))
 
-    with open(EXPENSE_JSON, "r", encoding="utf-8") as f:
+    with open(str(expense_json_path or EXPENSE_JSON), "r", encoding="utf-8") as f:
         expenses = json.load(f)
 
     # Build agents
@@ -57,11 +63,10 @@ def run_crewai_pipeline():
     # -----------------------------
     # 🔹 ADD THIS BLOCK HERE
     # -----------------------------
-    with open(
-        r"C:\Users\91978\course\final_year_project\final\server\outputs\final_report.txt",
-        "w",
-        encoding="utf-8"
-    ) as f:
+    final_report_file = Path(final_report_path or FINAL_REPORT)
+    final_report_file.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(final_report_file, "w", encoding="utf-8") as f:
         f.write(str(result))
 
     print("\n=== FINAL REPORT ===\n")

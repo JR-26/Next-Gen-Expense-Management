@@ -3,15 +3,15 @@ from pypdf import PdfReader
 from crewai import Agent, Task
 import json
 
-# ✅ Base directory (go 1 level up from agents/)
+#  Base directory (go 1 level up from agents/)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# ✅ Correct PDF path
+#  Correct PDF path
 POLICY_PDF = os.path.join(BASE_DIR, "data", "expense_policy_text.pdf")
 
 
 def load_policy_text(pdf_path=POLICY_PDF):
-    # ✅ Debug print (helps if path is wrong)
+    #  Debug print (helps if path is wrong)
     print(f"Loading policy PDF from: {pdf_path}")
 
     if not os.path.exists(pdf_path):

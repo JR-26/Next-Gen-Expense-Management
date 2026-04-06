@@ -1,0 +1,17 @@
+pandas
+torch
+transformers
+peft
+openpyxl
+crewai
+pypdf
+langchain
+sentence-transformers
+faiss-cpu
+groq
+langchain-groq
+dotenv
+litellm
+dotenv
+fastapi
+uvicorn

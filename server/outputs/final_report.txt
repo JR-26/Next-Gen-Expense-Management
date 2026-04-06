@@ -1,50 +1,62 @@
 **Compliance Report**
 
 **Introduction:**
-This report provides a summary of the compliance of expenses based on the validated data provided. The report highlights the total expenses, compliant vs non-compliant count, violations and reasons, overall compliance percentage, and recommendations.
+The purpose of this report is to provide an overview of the company's expense compliance for the given period. The report highlights the total expenses, compliant vs non-compliant count, violations and reasons, overall compliance percentage, and recommendations for improvement.
 
 **Total Expenses:**
-The total expenses for the given period are $32,226. This amount includes all the expenses incurred across different categories.
+The total expenses for the given period are: $16632 + $1295 + $2165 + $1949 + $2190 = $23231.
 
 **Compliant vs Non-Compliant Count:**
-Out of the 5 expenses reported, 2 are compliant, and 3 are non-compliant.
-
-**Compliant Expenses:**
-
-1. Transaction Date: 2025-03-18T00:00:00, Amount: $1949, Vendor: Vodafone, Expense Category: Communications, Reason: The vendor is approved for the communications category, and the amount is within the communications limit.
-2. Transaction Date: 2025-03-10T00:00:00, Amount: $2190, Vendor: KFC, Expense Category: Meals, Reason: The vendor is approved for the meals category, and the amount is within the meals limit.
-
-**Non-Compliant Expenses:**
-
-1. Transaction Date: 2025-04-01T00:00:00, Amount: $16632, Vendor: Air India, Expense Category: Unknown, Reasons: 
-   - The expense category is unknown, but based on the vendor and business purpose, it appears to be a travel expense. 
-   - The amount exceeds the travel limit of $15000.
-2. Transaction Date: 2025-04-15T00:00:00, Amount: $1295, Vendor: FunWorld, Expense Category: Leisure, Reasons: 
-   - The vendor is not approved for any category, 
-   - the expense category is not recognized, 
-   - and the business purpose is not clearly related to a specific category.
-3. Transaction Date: 2025-04-17T00:00:00, Amount: $2165, Vendor: Dominos, Expense Category: Unknown, Reasons: 
-   - The expense category is unknown, but based on the vendor and business purpose, it appears to be a meal expense. 
-   - The amount exceeds the meal limit of $1500.
+Based on the provided data, there are 0 compliant expenses and 5 non-compliant expenses.
 
 **Violations and Reasons:**
-The non-compliant expenses have the following violations and reasons:
-- Unapproved vendors: FunWorld
-- Unknown expense categories: 2 expenses
-- Exceeding category limits: Travel ($16632 exceeds $15000), Meals ($2165 exceeds $1500)
-- Unrecognized expense categories: Leisure
-- Business purpose not clearly related to a specific category: Team outing
+The following are the violations and reasons for non-compliance:
+
+1. Transaction Date: 2025-04-01
+   - Amount: $16632
+   - Vendor: Air India
+   - Reasons: 
+     * Amount exceeds the limit for Travel category
+     * Expense category is unknown, it should be categorized as Travel
+
+2. Transaction Date: 2025-04-15
+   - Amount: $1295
+   - Vendor: FunWorld
+   - Reasons: 
+     * Vendor is not approved for Entertainment category
+     * Is_Personal is true, which means this expense is personal and not for business purpose
+
+3. Transaction Date: 2025-04-17
+   - Amount: $2165
+   - Vendor: Dominos
+   - Reasons: 
+     * Amount exceeds the limit for Meals category
+     * Expense category is unknown, it should be categorized as Meals
+     * Is_Personal is true, which means this expense is personal and not for business purpose
+
+4. Transaction Date: 2025-03-18
+   - Amount: $1949
+   - Vendor: Vodafone
+   - Reasons: 
+     * Expense category is unknown, it should be categorized as Communications
+
+5. Transaction Date: 2025-03-10
+   - Amount: $2190
+   - Vendor: KFC
+   - Reasons: 
+     * Amount exceeds the limit for Meals category
+     * Expense category is unknown, it should be categorized as Meals
 
 **Overall Compliance Percentage:**
-The overall compliance percentage is 40% (2 compliant expenses out of 5 total expenses).
+The overall compliance percentage is 0% (0 compliant expenses out of 5 total expenses).
 
 **Recommendations:**
-Based on the compliance report, the following recommendations are made:
-- Ensure that all expenses have a recognized and approved expense category.
-- Verify that the vendor is approved for the corresponding expense category.
-- Ensure that the amount of the expense does not exceed the category limit.
-- Provide clear business purposes that are related to a specific category.
-- Consider adding FunWorld as an approved vendor for a specific category or removing it from the list of vendors used.
-- Provide training to employees on the importance of compliance with company expense policies and procedures.
-- Implement a system to track and monitor expenses in real-time to prevent non-compliant expenses from occurring.
-- Review and update the company's expense policies and procedures to ensure they are clear, concise, and easily accessible to all employees.
+To improve compliance, the following recommendations are made:
+
+1. Ensure that all expenses are properly categorized and comply with the approved vendor list.
+2. Verify that the amount of each expense does not exceed the specified limit for the respective category.
+3. Ensure that all expenses are for business purposes and not personal.
+4. Provide training to employees on the company's expense policy and procedures to ensure that they understand what is expected of them.
+5. Regularly review and audit expenses to identify and address any compliance issues in a timely manner.
+
+By implementing these recommendations, the company can improve its compliance rate and reduce the risk of non-compliant expenses.
